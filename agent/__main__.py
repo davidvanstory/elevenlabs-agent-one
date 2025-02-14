@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 
 app = FastAPI()
 
@@ -7,6 +7,6 @@ def read_root() -> dict[str, str]:
     return {}
 
 @app.post("/agent/accept")
-def accept_agent(request) -> dict[str, str]:
-    print(request)
+def accept_agent(request: Request) -> dict[str, str]:
+    print(request.json())
     return {}
