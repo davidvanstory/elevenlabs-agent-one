@@ -7,6 +7,7 @@ def read_root() -> dict[str, str]:
     return {}
 
 @app.post("/agent/accept")
-def accept_agent(request: Request) -> dict[str, str]:
-    print(request.json())
+async def accept_agent(request: Request) -> dict[str, str]:
+    request_body = await request.json()
+    print(request_body)
     return {}
