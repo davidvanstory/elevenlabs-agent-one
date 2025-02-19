@@ -20,8 +20,6 @@ async def search(request: Request) -> dict[str, str]:
 
 @app.get("/agent/get-note")
 async def get_note(request: Request) -> dict[str, str]:
-    request_body = await request.json()
-    print(request_body)
     return {
         "note": "This wasn't saved in the db"
     }
