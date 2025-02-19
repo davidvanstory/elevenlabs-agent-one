@@ -7,6 +7,8 @@ from typing import Any
 import os
 from dotenv import load_dotenv
 from pymongo import DESCENDING, MongoClient
+import requests
+
 _ = load_dotenv()
 
 MONGO_URI: str | None = os.getenv("MONGODB_URI")    
@@ -28,5 +30,39 @@ def get_note_from_db() -> str:
     else:
         return "couldn't find any relevant note"
 
-def search(note: str) -> str:
-    return "found data"
+#   const body = {
+#     model: metaData?.model || "llama-3.1-sonar-large-128k-online", // Specify the model
+#     messages: [
+#       { role: "system", content: "You are an AI assistant." },
+#       { role: "user", content: prompt },
+#     ],
+#     max_tokens: 1024,
+#     // temperature: 0.7
+#   };
+
+def query_perplexity(query: str):
+    url = "https://api.perplexity.ai/chat/completions"
+
+    
+    headers = {
+        "Accept": "application/json",
+        "Authorization": f"Bearer {os.getenv("PERPLEXITY_API_KEY")}",
+        "Content-Type": "application/json",
+    }
+    data = {
+        "model": "sonar",
+        "messages": [
+            { "role": "system", "content": "You are an AI assistant." },
+            { "role": "user", "content": query },
+        ],
+        "max_tokens": 1024,
+    }
+
+    response = requests.post(url, headers=headers, json=data)
+    citations = response.json()['citations']
+    output = response.json()['choices'][0]['message']['content']
+    return output
+
+def search_from_query(note: str) -> str:
+    result = query_perplexity(note)
+    return result

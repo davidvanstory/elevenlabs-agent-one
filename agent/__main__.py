@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Request
 
-from agent.helpers import get_note_from_db, save_note
+from agent.helpers import get_note_from_db, save_note, search_from_query
 
 app = FastAPI()
 
@@ -19,12 +19,15 @@ async def take_note(request: Request) -> dict[str, str]:
 @app.post("/agent/search")
 async def search(request: Request) -> dict[str, str]:
     request_body = await request.json()
-    print(request_body)
-    return {}
+    result = search_from_query(request_body['search_query'])
+    return {
+        "result": result
+    }
 
 @app.get("/agent/get-note")
 async def get_note(request: Request) -> dict[str, str]:
     note = get_note_from_db()
+    print("got note:", note)
     return {
         "note": note
     }
