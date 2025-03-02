@@ -1,9 +1,4 @@
-from pymongo.synchronous.mongo_client import MongoClient
-
-
 from typing import Any
-
-
 import os
 from dotenv import load_dotenv
 from pymongo import DESCENDING, MongoClient
@@ -11,7 +6,8 @@ import requests
 
 _ = load_dotenv()
 
-MONGO_URI: str | None = os.getenv("MONGODB_URI")    
+# MONGO_URI: str | None = os.getenv("MONGODB_URI") 
+MONGO_URI = os.getenv("MONGODB_URI")  # Remove type annotation   
 client = MongoClient(MONGO_URI)
 db = client['eleven_labs_assistant']
 notes_collection = db['notes']
@@ -46,7 +42,7 @@ def query_perplexity(query: str):
     
     headers = {
         "Accept": "application/json",
-        "Authorization": f"Bearer {os.getenv("PERPLEXITY_API_KEY")}",
+        "Authorization": f"Bearer {os.getenv('PERPLEXITY_API_KEY')}",
         "Content-Type": "application/json",
     }
     data = {
