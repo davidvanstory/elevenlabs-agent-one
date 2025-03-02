@@ -6,7 +6,7 @@ app = FastAPI()
 
 @app.get("/")
 def read_root() -> dict[str, str]:
-    return {}
+    return {"note": "The grass is always greener on the other side."}
 
 @app.post("/agent/take-note")
 async def take_note(request: Request) -> dict[str, str]:
