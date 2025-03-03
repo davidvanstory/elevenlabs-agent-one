@@ -8,9 +8,15 @@ app = FastAPI()
 def read_root() -> dict[str, str]:
     return {}
 
+#command to use with Marine tool. 
 @app.get("/agent/grass")
 def read_root() -> dict[str, str]:
     return {"note": "The sea is always bluer"}
+
+#command to use if voice agent is asked to call the pizza guy
+@app.get("/agent/pizza")
+def read_root() -> dict[str, str]:
+    return {"note": "The pizza guy's number is 234. Do you want cheese or pepperoni?"}
 
 @app.post("/agent/take-note")
 async def take_note(request: Request) -> dict[str, str]:
