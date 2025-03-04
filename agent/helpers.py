@@ -3,6 +3,7 @@ import os
 from dotenv import load_dotenv
 from pymongo import DESCENDING, MongoClient
 import requests
+from datetime import datetime  # Import datetime
 
 _ = load_dotenv()
 
@@ -62,3 +63,15 @@ def query_perplexity(query: str):
 def search_from_query(note: str) -> str:
     result = query_perplexity(note)
     return result
+
+# Move save_weather_data function outside of search_from_query
+def save_weather_data(latitude: float, longitude: float, weather_data: dict) -> bool:
+    weather_collection = db.weather  # Assuming 'db' is your MongoDB database connection
+    weather_entry = {
+        "latitude": latitude,
+        "longitude": longitude,
+        "weather": weather_data,
+        "timestamp": datetime.utcnow()  # Save the current timestamp
+    }
+    result = weather_collection.insert_one(weather_entry)
+    return result.inserted_id is not None
