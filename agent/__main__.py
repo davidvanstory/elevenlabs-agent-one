@@ -1,4 +1,6 @@
 from fastapi import FastAPI, Request
+import requests
+from typing import Any
 
 from agent.helpers import get_note_from_db, save_note, search_from_query
 
@@ -34,6 +36,7 @@ async def search(request: Request) -> dict[str, str]:
         "result": result
     }
 
+
 @app.get("/agent/get-note")
 async def get_note(request: Request) -> dict[str, str]:
     note = get_note_from_db()
@@ -41,3 +44,20 @@ async def get_note(request: Request) -> dict[str, str]:
     return {
         "note": note
     }
+
+@app.get("/agent/weather")
+async def get_weather(latitude: float, longitude: float) -> dict[str, Any]:
+    if not latitude or not longitude:
+        return {"status": "error", "message": "Latitude and longitude are required."}
+    
+    url = f"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&current_weather=true"
+    
+    response = requests.get(url)
+    if response.status_code == 200:
+        weather_data = response.json()
+        return {
+            "status": "success",
+            "weather": weather_data['current_weather']
+        }
+    else:
+        return {"status": "error", "message": "Failed to retrieve weather data."}
