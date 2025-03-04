@@ -55,9 +55,15 @@ async def get_weather(latitude: float, longitude: float) -> dict[str, Any]:
     response = requests.get(url)
     if response.status_code == 200:
         weather_data = response.json()
+        
+        # Save to database
+        from agent.helpers import save_weather_data
+        save_success = save_weather_data(latitude, longitude, weather_data['current_weather'])
+        
         return {
             "status": "success",
-            "weather": weather_data['current_weather']
+            "weather": weather_data['current_weather'],
+            "saved_to_db": save_success
         }
     else:
         return {"status": "error", "message": "Failed to retrieve weather data."}

@@ -64,14 +64,28 @@ def search_from_query(note: str) -> str:
     result = query_perplexity(note)
     return result
 
-# Move save_weather_data function outside of search_from_query
+
 def save_weather_data(latitude: float, longitude: float, weather_data: dict) -> bool:
-    weather_collection = db.weather  # Assuming 'db' is your MongoDB database connection
-    weather_entry = {
+    """
+    Save weather data to MongoDB collection
+    
+    Args:
+        latitude: The latitude coordinate
+        longitude: The longitude coordinate
+        weather_data: The weather data from the API
+        
+    Returns:
+        bool: True if save was successful, False otherwise
+    """
+    document = {
         "latitude": latitude,
         "longitude": longitude,
-        "weather": weather_data,
-        "timestamp": datetime.utcnow()  # Save the current timestamp
+        "weather_data": weather_data,
+        "timestamp": datetime.datetime.utcnow()  # Add timestamp for when data was saved
     }
-    result = weather_collection.insert_one(weather_entry)
-    return result.inserted_id is not None
+    
+    result = db['weather_data'].insert_one(document)  # Create/use a weather_data collection
+    if result.inserted_id:
+        return True
+    else:
+        return False
