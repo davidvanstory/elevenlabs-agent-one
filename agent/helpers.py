@@ -81,7 +81,7 @@ def save_weather_data(latitude: float, longitude: float, weather_data: dict) -> 
         "latitude": latitude,
         "longitude": longitude,
         "weather_data": weather_data,
-        "timestamp": datetime.datetime.utcnow()  # Add timestamp for when data was saved
+        "timestamp": datetime.utcnow()  # Add timestamp for when data was saved
     }
     
     result = db['weather_data'].insert_one(document)  # Create/use a weather_data collection
