@@ -89,3 +89,5 @@ def save_weather_data(latitude: float, longitude: float, weather_data: dict) -> 
         return True
     else:
         return False
+
+
